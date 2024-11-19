@@ -40,6 +40,9 @@ class MainActivity : AppCompatActivity() {
         showButton = findViewById<Button>(R.id.showComicButton)
         comicImageView = findViewById<ImageView>(R.id.comicImageView)
 
+
+        //loadSavedComic()
+
         showButton.setOnClickListener {
             downloadComic(numberEditText.text.toString())
         }
@@ -55,6 +58,7 @@ class MainActivity : AppCompatActivity() {
                 , {}
             )
         )
+
     }
 
     // Display a comic for a given comic JSON object
@@ -67,7 +71,16 @@ class MainActivity : AppCompatActivity() {
     // Implement this function
     private fun saveComic(comicObject: JSONObject) {
 
+        val sharedPreferences = getSharedPreferences("comics", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString("title", comicObject.getString("title"))
+        editor.putString("description", comicObject.getString("alt"))
+        editor.putString("imageUrl", comicObject.getString("img"))
+        editor.apply()
+
     }
+
+
 
 
 }
