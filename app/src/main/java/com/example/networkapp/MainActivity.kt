@@ -16,8 +16,8 @@ import com.squareup.picasso.Picasso
 import org.json.JSONObject
 
 // fixed bugs
-// TODO (2: Add function saveComic(...) to save comic info when downloaded
-// TODO (3: Automatically load previously saved comic when app starts)
+// added saveComic functionality
+// previously saved comic loaded automatically when onCreate runs
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
         comicImageView = findViewById<ImageView>(R.id.comicImageView)
 
 
-        //loadSavedComic()
+        loadSavedComic()
 
         showButton.setOnClickListener {
             downloadComic(numberEditText.text.toString())
@@ -50,19 +50,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Fetches comic from web as JSONObject
-    private fun downloadComic (comicId: String) {
+    private fun downloadComic(comicId: String) {
         val url = "https://xkcd.com/$comicId/info.0.json"
-        requestQueue.add (
-            JsonObjectRequest(url
-                , {showComic(it)}
-                , {}
+        requestQueue.add(
+            JsonObjectRequest(url, {
+                image ->
+                showComic(image)
+                saveComic(image)}, {}
             )
         )
 
     }
 
     // Display a comic for a given comic JSON object
-    private fun showComic (comicObject: JSONObject) {
+    private fun showComic(comicObject: JSONObject) {
         titleTextView.text = comicObject.getString("title")
         descriptionTextView.text = comicObject.getString("alt")
         Picasso.get().load(comicObject.getString("img")).into(comicImageView)
@@ -80,7 +81,19 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    //new function to load the saved comic if it exists. this will run in oncreate
+    private fun loadSavedComic() {
+        val sharedPreferences = getSharedPreferences("comics", MODE_PRIVATE)
+        val title = sharedPreferences.getString("title", "")
+        val description = sharedPreferences.getString("description", "")
+        val imageUrl = sharedPreferences.getString("imageUrl", "")
+
+        if (!title.isNullOrEmpty() && !description.isNullOrEmpty() && !imageUrl.isNullOrEmpty()) {
+            titleTextView.text = title
+            descriptionTextView.text = description
+            Picasso.get().load(imageUrl).into(comicImageView)
+        }
 
 
-
+    }
 }
