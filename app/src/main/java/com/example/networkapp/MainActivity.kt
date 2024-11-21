@@ -14,6 +14,7 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.squareup.picasso.Picasso
 import org.json.JSONObject
+import java.io.FileOutputStream
 
 // fixed bugs
 // added saveComic functionality
@@ -80,6 +81,19 @@ class MainActivity : AppCompatActivity() {
         editor.apply()
 
     }
+
+    //should not use shared preferences, should use outputstream
+//    private fun saveComic(comicObject: JSONObject){
+//        try{
+//            val outputStream = FileOutputStream(file)
+//            outputStream.write(textBox.text.toString().toByteArray())
+//            outputStream.close()
+//        } catch (e: Exception){
+//            e.printStackTrace()
+//        }
+//    }
+
+
 
     //new function to load the saved comic if it exists. this will run in oncreate
     private fun loadSavedComic() {
